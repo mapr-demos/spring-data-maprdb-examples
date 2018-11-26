@@ -1,6 +1,6 @@
 # Spring Data MapR DB Examples
 
-In this demo we explain the basic usage of Spring Data MapR DB with all its key features. We used Java 8, Gradle and Spring Boot for this demo.
+In this demo we explain the basic usage of Spring Data MapR DB with all its key features. We used Java 8, Gradle and Spring Boot 2.1.0 for this demo.
 
 * [Part 1 - Getting Started](#part-1---getting-started)
 * [Part 2 - CRUD operations](#part-2---crud-operations)
@@ -11,7 +11,7 @@ In this demo we explain the basic usage of Spring Data MapR DB with all its key 
 
 1) Generate and download project with necessary modules from https://start.spring.io/
 
-2) Add maven repository for MapR and path to folder with repository of [Spring Data MapR DB](https://github.com/mapr-demos/spring-data-maprdb/releases) in build.gradle
+2) Add maven repository for MapR and [JitPack](https://jitpack.io/) in build.gradle
 
 ```java
 repositories {
@@ -20,18 +20,18 @@ repositories {
         url 'http://repository.mapr.com/maven'
     }
     maven {
-            url '/path/to/spring/data/maprdb/repository'
+            url 'https://jitpack.io'
     }
 }
 ```
 
-3) Add spring data maprdb dependence in build.gradle
+3) Add [Spring Data MapR DB](https://github.com/mapr-demos/spring-data-maprdb) dependence in build.gradle
 
 ```java
-compile("com.mapr.springframework.data:spring-data-maprdb:1.0.0.M2")
+compile("com.github.mapr-demos:spring-data-maprdb:1.0.0.M2")
 ```
 4) Create modify Application class and  enable MapR repository
-* @EnableMapRRepository enables repositories
+* `@EnableMapRRepository` enables repositories
  
 ```java 
 @SpringBootApplication
@@ -49,7 +49,7 @@ public class DemoApplication implements CommandLineRunner {
 ```
 
 5) Create a Configuration class
-* getDatabaseName() Method returns the database name, which is path in MapR FS
+* `getDatabaseName()` Method returns the database name, which is path in MapR FS
 ```java
 @Configuration
 class DatabaseConfig extends AbstractMapRConfiguration {
@@ -78,7 +78,7 @@ class DatabaseConfig extends AbstractMapRConfiguration {
 ```
 6) Create model
 
-Let’s create model for users. Class should be annotated as @Document, you can also specify name for it’s table, for example ‘users’, otherwise name will be generated from class name. You should also annotate your id as @JsonProperty("_id").
+Let’s create model for users. Class should be annotated as `@Document`, you can also specify name for it’s table, for example ‘users’, otherwise name will be generated from class name. You should also annotate your id as `@Id`.
 ```java
 @Document("users")
 public class User {
@@ -339,9 +339,9 @@ User{id='6a0afdc4-4d76-48b8-adc1-1bbd652e6b67', name='Bill', enabled=true, age=1
 =====================
 ```
 ## Part 4 - Query methods
-When it comes to more complex use cases where a derived method would get way too long and become unreadable, queries can be supplied with the @Query annotation on methods in our repositories. For now Spring Data MapR DB supports only queries without parameters.
+When it comes to more complex use cases where a derived method would get way too long and become unreadable, queries can be supplied with the `@Query` annotation on methods in our repositories. For now Spring Data MapR DB supports only queries without parameters.
 
-Let’s add some request with @Query annotation to repository:
+Let’s add some request with `@Query` annotation to repository:
 ```java
 public interface UserRepository extends MapRRepository <User, String> {
     @Query("{\"$and\":[ {\"$eq\":{\"enabled\":true}}]}")
